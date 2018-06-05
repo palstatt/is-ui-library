@@ -1,6 +1,6 @@
 {
   "name": "is-ui-library",
-  "version": "1.0.1",
+  "version": "1.0.12",
   "description": "is-ui-library React component",
   "main": "lib/index.js",
   "module": "es/index.js",
