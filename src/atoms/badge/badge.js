@@ -28,6 +28,10 @@ const themes = {
   attention: {
     bg: colors.attention,
     fg: colors.black,
+  },
+  disabled: {
+    bg: colors.grey,
+    fg: colors.black,
   }
 }
 

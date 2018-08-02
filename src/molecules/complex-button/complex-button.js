@@ -54,11 +54,11 @@ export default class ComplexButton extends Component {
   }
 
   render() {
-    const { flip, label, childComponent, customTheme } = this.props
+    const { flip, label, childComponent, customTheme, ...props } = this.props
     const theme = !!customTheme ? customTheme : this.getTheme()
     return (
       <ThemeProvider theme={theme}>
-        <ButtonContainer flip={flip}>
+        <ButtonContainer flip={flip} {...props}>
           <ButtonLabel>{label.toUpperCase()}</ButtonLabel>
           {childComponent}
         </ButtonContainer>

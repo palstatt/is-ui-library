@@ -1,201 +1,268 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import posed from 'react-pose';
-import styled from 'styled-components';
-import {
-  MaterialIcon,
-  Flip,
-  colors,
-  shadows
-} from '../../';
-import DropdownOption from './dropdown-option';
+import React, { Component, Fragment } from 'react'
+import PropTypes from 'prop-types'
+import posed from 'react-pose'
+import styled from 'styled-components'
+import { MaterialIcon, Flip, P, colors, shadows } from '../../'
+import DropdownOption from './dropdown-option'
 
 // styling for container for dropdown component
 const DropdownContainer = styled.div`
-  outline: none;
-  width: 400px;
-  max-height: 310px;
-  background: transparent;
-  user-select: none;
-  transition: .25s ease;
+	outline: none;
+	position: relative;
+	width: auto;
+	max-width: 400px;
+	background: transparent;
+	user-select: none;
+	transition: 0.2s ease;
 `
 
-// styling for head container, changing background when component is active
+// styling for head container, changing background when component is open
 const HeadContainer = styled.div`
-  display: inline-flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  border-radius: 4px 4px 0 0;
-  height: 56px;
-  padding: 16px;
-  cursor: pointer;
-  background: ${props => props.active ? colors.lightest_grey : 'transparent'};
-  transition: .2s ease;
+	display: inline-flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	border-radius: 4px 4px 0 0;
+	height: 56px;
+	padding: 16px;
+	cursor: pointer;
+	background: ${props => (props.open ? colors.lightest_grey : 'transparent')};
+	transition: 0.2s ease;
 `
 
 // styling for title container
 const TitleContainer = styled.div`
-  display: inline-flex;
-  align-items: center;
+	display: inline-flex;
+	align-items: center;
+	width: 100%;
+	justify-content: ${props => (props.spread ? 'space-between' : 'center')};
 `
 
 // styling for title
-const Title = styled.p`
-  color: inherit;
-  margin: 0 16px 0 0;
-  font-size: 1em;
-  font-weight: bold;
+const Title = styled.span`
+	color: ${props => props.theme.border || 'inherit'};
+	margin: 0 16px 0 0;
+	font-size: 1em;
+	font-weight: bold;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 `
 
-const SelectionName = styled.p`
-  color: ${props => props.hover ? colors.black : colors.light_grey};
-  transition: .2s ease;
+const ValueEm = styled.span`
+	color: ${props => (props.active ? colors.primary : colors.black)};
+	font-size: 1em;
+	font-weight: bold;
+	transition: 0.2s ease;
+`
+
+const SelectionName = styled.em`
+	color: ${props => (props.hovered ? colors.black : colors.light_grey)};
+	transition: 0.2s ease;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin-left: 8px;
 `
 
 /**
-* styling for options collection, expanding when active, becoming more opaque
-* when hovered, and adding a box shadow when active
-**/
+ * styling for options collection, expanding when open, becoming more opaque
+ * when hovereded, and adding a box shadow when open
+ **/
 const optionsCollectionProps = {
-  open: { height: 254, staggerChildren: 50 },
-  closed: { height: 0 }
+	open: { height: 168, flip: true },
+	closed: { height: 0 },
 }
 const OptionsCollection = styled(posed.div(optionsCollectionProps))`
-  background: ${colors.white};
-  color: ${colors.black};
-  border: 2px solid ${colors.black};
-  border-radius: 0 0 4px 4px;
-  height: ${props => props.height}px;
-  max-height: 254px;
-  overflow-y: scroll;
-  opacity: ${props => props.active || props.hover ? 1 : 0.2};
-  box-shadow: ${props => props.hover || props.active ? shadows.basic : 0};
-  transition: all .2s ease;
+	background: ${colors.white};
+	color: ${colors.black};
+	border: 2px solid ${colors.black};
+	opacity: ${props => (props.open || props.hovered ? 1 : 0.2)};
+	box-shadow: ${props => (props.hovered || props.open ? shadows.basic : 0)};
+	height: ${props => props.height}px;
+	position: absolute;
+	top: 56px;
+	width: 100%;
+	max-width: inherit;
+	border-radius: 0 0 4px 4px;
+	max-height: 172px;
+	overflow-y: scroll;
+	z-index: 10;
+	transition: all 0.2s ease;
 `
 
 /**
-* container for option animation, translating on y axis when appearing
-* and disappearing
-**/
+ * container for option animation, translating on y axis when appearing
+ * and disappearing
+ **/
 const PosedContainer = posed.div({
-  open: { y: '0%' },
-  closed: { y: '100%' }
+	open: { y: '0' },
+	closed: { y: '-80px' },
 })
 
 // dropdown component with required [options, label] props
 export default class Dropdown extends Component {
+	state = {
+		open: false,
+		selectionIndex: null,
+		hovered: false,
+	}
 
-  state = {
-    active: false,
-    selectionIndex: null,
-    hover: false,
-    options: this.props.options,
-  }
+	static propTypes = {
+		options: PropTypes.arrayOf(
+			PropTypes.shape({
+				name: PropTypes.string.isRequired,
+			})
+		).isRequired,
+		label: PropTypes.string.isRequired,
+		dynamicLabel: PropTypes.func,
+		valueChange: PropTypes.func,
+		nullOption: PropTypes.shape({
+			id: PropTypes.any.isRequired,
+			title: PropTypes.string.isRequired,
+		}),
+	}
 
-  static propTypes = {
-    options: PropTypes.arrayOf(PropTypes.object).isRequired,
-    label: PropTypes.string.isRequired,
-    valueChange: PropTypes.func,
-  }
+	static defaultProps = {
+		options: [
+			{
+				name: 'No options listed',
+				selected: false,
+			},
+		],
+		maxSelected: 3,
+		label: 'Missing label',
+	}
 
-  static defaultProps = {
-    options: [
-      {
-        name: 'No options listed',
-        active: false,
-      },
-    ],
-    maxSelected: 3,
-    label: 'Missing label',
-  }
+	handleClickOutside = e => {
+		if (!this.wrapperRef.contains(e.target)) {
+			this.setState({ open: false })
+		}
+	}
 
+	handleClick = () => {
+		this.setState(prevState => ({ open: !prevState.open }))
+	}
 
-  handleClickOutside = (e) => {
-    if (!this.wrapperRef.contains(e.target)) {
-      this.setState({active: false})
-    }
-  }
+	handleMouseEnter = () => {
+		this.setState({
+			hovered: true,
+		})
+	}
 
-  handleClick = () => {
-    this.setState(prevState => ({active: !prevState.active}))
-  }
+	handleMouseLeave = () => {
+		this.setState({
+			hovered: false,
+		})
+	}
 
-  handleMouseEnter = () => {
-    this.setState({
-      hover: true,
-    })
-  }
+	handleToggle = id => {
+		this.props.onValueChange(id)
+	}
 
-  handleMouseLeave = () => {
-    this.setState({
-      hover: false,
-    })
-  }
+	componentDidMount() {
+		document.addEventListener('mousedown', this.handleClickOutside)
+	}
 
-  handleToggle = (option) => {
-    const { options } = this.state
-    const { valueChange, name } = this.props
-    const tagIndex = options.findIndex((i) => i === option)
-    this.setState({
-      selectionIndex: tagIndex,
-    })
-    valueChange(option, name)
-  }
+	componentWillUnmount() {
+		document.removeEventListener('mousedown', this.handleClickOutside)
+	}
 
-  componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside)
-  }
+	componentDidUpdate(nextProps) {
+		if (nextProps.value !== this.props.value) {
+			this.setState({ open: false })
+		}
+	}
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside)
-  }
-
-  render() {
-    const { active, hover, selectionIndex } = this.state
-    const { label, options } = this.props
-    return (
-      <DropdownContainer
-        active={active}
-        innerRef={wrapperRef => this.wrapperRef = wrapperRef}
-      >
-        <HeadContainer
-          onClick={this.handleClick}
-          onMouseEnter={this.handleMouseEnter}
-          onMouseLeave={this.handleMouseLeave}
-          active={active}
-          hover={hover}
-        >
-          <TitleContainer>
-            <Title>{label}</Title>
-            <Flip
-              in={active}
-              component={<MaterialIcon>arrow_drop_down</MaterialIcon>}
-            />
-          </TitleContainer>
-          <SelectionName hover={hover}>
-            {selectionIndex !== null ? options[selectionIndex].name : ''}
-          </SelectionName>
-        </HeadContainer>
-        <OptionsCollection
-          active={active}
-          hover={hover}
-          pose={active ? 'open' : 'closed'}
-        >
-            {options.map((option, index) =>
-              <PosedContainer
-                pose={active ? 'open' : 'closed'}
-                key={option.name}
-              >
-                <DropdownOption
-                  title={option.name}
-                  active={index === selectionIndex}
-                  toggle={() => this.handleToggle(option)}
-                />
-              </PosedContainer>
-            )}
-        </OptionsCollection>
-      </DropdownContainer>
-    )
-  }
+	render() {
+		const { open, hovered } = this.state
+		const {
+			value,
+			label,
+			options,
+			dynamicLabel,
+			nullOption,
+			noNullSelect,
+		} = this.props
+		const selectedOption = options.find(option => option.id === value)
+		return (
+			<DropdownContainer
+				open={open}
+				innerRef={wrapperRef => (this.wrapperRef = wrapperRef)}>
+				<HeadContainer
+					onClick={this.handleClick}
+					onMouseEnter={this.handleMouseEnter}
+					onMouseLeave={this.handleMouseLeave}
+					open={open}
+					hovered={hovered}>
+					{dynamicLabel ? (
+						<Fragment>
+							<TitleContainer spread>
+								<Title>
+									{dynamicLabel(
+										<ValueEm active={open || hovered}>
+											{value !== 0 && selectedOption ? selectedOption.name : ''}
+										</ValueEm>
+									)}
+								</Title>
+								<Flip
+									in={open}
+									component={
+										<MaterialIcon color={colors.black}>
+											arrow_drop_down
+										</MaterialIcon>
+									}
+								/>
+							</TitleContainer>
+						</Fragment>
+					) : (
+						<Fragment>
+							<TitleContainer>
+								<Title>{label}</Title>
+								<Flip
+									in={open}
+									component={
+										<MaterialIcon color={colors.black}>
+											arrow_drop_down
+										</MaterialIcon>
+									}
+								/>
+							</TitleContainer>
+							<SelectionName hovered={hovered}>
+								{value !== 0 && selectedOption ? selectedOption.name : ''}
+							</SelectionName>
+						</Fragment>
+					)}
+				</HeadContainer>
+				<OptionsCollection
+					open={open}
+					hovered={hovered}
+					pose={open ? 'open' : 'closed'}>
+					{nullOption && (
+						<PosedContainer
+							pose={open ? 'open' : 'closed'}
+							key={'__nullOption__'}>
+							<DropdownOption
+								disabled={noNullSelect}
+								title={nullOption.title}
+								selected={nullOption.id === value}
+								onToggle={() =>
+									!noNullSelect && this.handleToggle(nullOption.id)
+								}
+							/>
+						</PosedContainer>
+					)}
+					{options.map((option, index) => (
+						<PosedContainer pose={open ? 'open' : 'closed'} key={option.name}>
+							<DropdownOption
+								title={option.name}
+								selected={option.id === value}
+								onToggle={() => this.handleToggle(option.id)}
+							/>
+						</PosedContainer>
+					))}
+				</OptionsCollection>
+			</DropdownContainer>
+		)
+	}
 }

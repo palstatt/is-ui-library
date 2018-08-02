@@ -1,45 +1,48 @@
 {
-  "name": "is-ui-library",
-  "version": "1.0.12",
-  "description": "is-ui-library React component",
-  "main": "lib/index.js",
-  "module": "es/index.js",
-  "files": [
-    "css",
-    "es",
-    "lib",
-    "umd"
-  ],
-  "scripts": {
-    "build": "nwb build-react-component",
-    "clean": "nwb clean-module && nwb clean-demo",
-    "start": "nwb serve-react-demo",
-    "test": "nwb test-react",
-    "test:coverage": "nwb test-react --coverage",
-    "test:watch": "nwb test-react --server"
-  },
-  "dependencies": {
-    "immutability-helper": "^2.7.0",
-    "moment": "^2.22.1",
-    "react-animate-height": "^1.0.2",
-    "react-autosize-textarea": "^3.0.3",
-    "react-pose": "^1.5.3",
-    "react-transition-group": "^2.3.1",
-    "styled-components": "^3.2.6"
-  },
-  "peerDependencies": {
-    "react": "16.x"
-  },
-  "devDependencies": {
-    "nwb": "0.21.x",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2"
-  },
-  "author": "",
-  "homepage": "",
-  "license": "MIT",
-  "repository": "",
-  "keywords": [
-    "react-component"
-  ]
+	"name": "is-ui-library",
+	"version": "1.0.12",
+	"description": "is-ui-library React component",
+	"main": "lib/index.js",
+	"module": "es/index.js",
+	"files": [
+		"css",
+		"es",
+		"lib",
+		"umd"
+	],
+	"scripts": {
+		"build": "nwb build-react-component",
+		"clean": "nwb clean-module && nwb clean-demo",
+		"start": "nwb serve-react-demo",
+		"test": "nwb test-react",
+		"test:coverage": "nwb test-react --coverage",
+		"test:watch": "nwb test-react --server"
+	},
+	"dependencies": {
+		"immutability-helper": "^2.7.1",
+		"moment": "^2.22.2",
+		"react-animate-height": "^2.0.3",
+		"react-autosize-textarea": "^4.0.0",
+		"react-pose": "^2.2.0",
+		"react-transition-group": "^2.4.0",
+		"rxjs": "^6.2.2",
+		"styled-components": "^3.3.3"
+	},
+	"peerDependencies": {
+		"react": "16.x"
+	},
+	"devDependencies": {
+		"axios": "^0.18.0",
+		"nwb": "0.21.x",
+		"react": "^16.4.1",
+		"react-dom": "^16.4.1",
+		"react-helmet": "^5.2.0"
+	},
+	"author": "",
+	"homepage": "",
+	"license": "MIT",
+	"repository": "",
+	"keywords": [
+		"react-component"
+	]
 }
