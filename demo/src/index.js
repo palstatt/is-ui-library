@@ -13,6 +13,8 @@ import {
 	TagCollection,
 	Pill,
 	SnackBar,
+	QuickSwitch,
+	OptionDropdown,
 	UserCard,
 	Columnizer,
 	TagText,
@@ -284,6 +286,21 @@ const filterOptions = [
 	},
 ]
 
+const statuses = [
+	{
+		label: 'available',
+		activeColor: colors.complete,
+	},
+	{
+		label: 'busy',
+		activeColor: colors.attention,
+	},
+	{
+		label: 'unavailable',
+		activeColor: colors.warning,
+	},
+]
+
 class Demo extends Component {
 	state = {
 		messages: [
@@ -334,10 +351,16 @@ class Demo extends Component {
 					<Toolbar />
 					<ContextNav />
 					<BodyContainer>
-						<ButtonForm
+						{/* <ButtonForm
 							buttonLabel="report issue"
 							formName="test"
 							formFields={formFields}
+						/> */}
+						<QuickSwitch
+							label="change status"
+							options={statuses}
+							theme="default"
+							prompt="I'm currently..."
 						/>
 						<Drawer
 							label={'Tech Status'}

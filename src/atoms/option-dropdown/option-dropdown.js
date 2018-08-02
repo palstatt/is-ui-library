@@ -41,10 +41,20 @@ const reverseTheme = ({ bg, fg, ...rest }) => ({
 	...rest,
 })
 
+const Wrapper = styled.div`
+	position: relative;
+`
+
 const Container = styled.div`
-	background: ${props => props.theme.bg || colors.primary};
+	background: ${props =>
+		props.hover && !props.open
+			? props.theme.container_bg_hover
+			: props.theme.bg};
 	color: ${props => props.theme.fg || colors.white};
-	border: 2px solid ${props => props.theme.border || 'none'};
+	border: 2px solid
+		${props =>
+			props.open ? props.theme.border : 'transparent' || 'transparent'};
+	height: 32px;
 	display: inline-flex;
 	justify-content: space-between;
 	align-items: center;
@@ -166,46 +176,50 @@ export default class OptionDropdown extends Component {
 
 	render() {
 		const { open, hover } = this.state
-		const { selectionId, theme, label, options } = this.props
+		const { selectionId, theme, label, options, changeFilter } = this.props
 		return (
-			<ThemeProvider
-				theme={open || hover ? reverseTheme(themes[theme]) : themes[theme]}>
-				<Fragment>
-					<Container
-						innerRef={wrapperRef => (this.wrapperRef = wrapperRef)}
-						onMouseEnter={() => {
-							this.setState({ hover: true })
-						}}
-						onMouseLeave={() => {
-							this.setState({ hover: false })
-						}}
-						onClick={this.handleClickContainer}>
-						<FilterLabel>
-							{selectionId ? selectionId.toUpperCase() : label.toUpperCase()}
-						</FilterLabel>
-						<Flip in={open} component={<DropdownIcon />} />
-					</Container>
-					<PoseGroup>
-						{open && (
-							<OptionsCollection key="__container__">
-								{options.map(option => (
-									<Fragment key={option.label}>
-										{option.label !== selectionId && (
-											<Option
-												onMouseDown={() => {
-													this.props.changeFilter(option.label)
-													this.setState({ open: false })
-												}}>
-												<OptionText>{option.label.toUpperCase()}</OptionText>
-											</Option>
-										)}
-									</Fragment>
-								))}
-							</OptionsCollection>
-						)}
-					</PoseGroup>
-				</Fragment>
-			</ThemeProvider>
+			<Wrapper>
+				<ThemeProvider
+					theme={open ? reverseTheme(themes[theme]) : themes[theme]}>
+					<Fragment>
+						<Container
+							open={open}
+							hover={hover}
+							innerRef={wrapperRef => (this.wrapperRef = wrapperRef)}
+							onMouseEnter={() => {
+								this.setState({ hover: true })
+							}}
+							onMouseLeave={() => {
+								this.setState({ hover: false })
+							}}
+							onClick={this.handleClickContainer}>
+							<FilterLabel>
+								{selectionId ? selectionId.toUpperCase() : label.toUpperCase()}
+							</FilterLabel>
+							<Flip in={open} component={<DropdownIcon />} />
+						</Container>
+						<PoseGroup>
+							{open && (
+								<OptionsCollection key="__container__">
+									{options.map(option => (
+										<Fragment key={option.label}>
+											{option.label !== selectionId && (
+												<Option
+													onMouseDown={() => {
+														changeFilter(option.label)
+														this.setState({ open: false })
+													}}>
+													<OptionText>{option.label.toUpperCase()}</OptionText>
+												</Option>
+											)}
+										</Fragment>
+									))}
+								</OptionsCollection>
+							)}
+						</PoseGroup>
+					</Fragment>
+				</ThemeProvider>
+			</Wrapper>
 		)
 	}
 }

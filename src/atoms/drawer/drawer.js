@@ -93,6 +93,7 @@ export default class Drawer extends Component {
 		badgeTheme: PropTypes.string.isRequired,
 		label: PropTypes.string.isRequired,
 		collectionComponent: PropTypes.element.isRequired,
+		collection: PropTypes.array.isRequired,
 		centeredHeader: PropTypes.bool,
 		small: PropTypes.bool,
 	}
@@ -100,6 +101,7 @@ export default class Drawer extends Component {
 	static defaultProps = {
 		badgeTheme: 'primary',
 		label: 'Label',
+		collection: [],
 	}
 
 	getValue = value => {
