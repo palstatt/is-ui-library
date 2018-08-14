@@ -28,7 +28,7 @@ export class DatePicker extends Component {
 				endDate: momentPropTypes.momentObj,
 			}),
 			momentPropTypes.momentObj,
-		]).isRequired,
+		]),
 		handleValueChange: PropTypes.func.isRequired,
 		dateType: PropTypes.oneOf(Object.entries(dateTypes).map(type => type[1])),
 	}

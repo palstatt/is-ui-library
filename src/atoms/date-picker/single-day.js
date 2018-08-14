@@ -7,25 +7,9 @@ import { SingleDatePicker } from 'react-dates'
 import { MaterialIcon } from '../material-icon'
 import { colors } from '../..'
 
-const IconContainer = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-`
-
-const ArrowIcon = styled(MaterialIcon).attrs({
-	children: 'arrow_right_alt',
-	color: colors.black,
-})``
-
-const CloseIcon = styled(MaterialIcon).attrs({
-	children: 'close',
-	color: colors.primary,
-})``
-
 export default class DateRange extends Component {
 	state = {
-		focused: false,
+		focused: true,
 	}
 
 	static propTypes = {
@@ -52,13 +36,8 @@ export default class DateRange extends Component {
 				focused={focused}
 				onFocusChange={({ focused }) => this.setState({ focused })}
 				id="single_date"
-				customCloseIcon={
-					<IconContainer>
-						<CloseIcon />
-					</IconContainer>
-				}
+				small
 				noBorder
-				showClearDate
 			/>
 		)
 	}

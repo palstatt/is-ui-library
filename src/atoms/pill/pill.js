@@ -51,6 +51,8 @@ const RemoveIcon = styled(MaterialIcon).attrs({
 })`
 	color: ${colors.black};
 	cursor: pointer;
+	z-index: 0;
+	margin-left: 8px;
 `
 
 export default class Pill extends Component {

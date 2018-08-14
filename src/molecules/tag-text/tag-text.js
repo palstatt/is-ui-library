@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import moment from 'moment'
 import {
 	MaterialIcon,
 	OptionDropdown,
@@ -10,6 +11,12 @@ import {
 	colors,
 	shadows,
 } from '../..'
+
+const types = {
+	DATE: 'DATE',
+	DATE_RANGE: 'DATE_RANGE',
+	TEXT: 'TEXT',
+}
 
 const Wrapper = styled.div``
 
@@ -80,7 +87,7 @@ const PillCollection = ({ filters, removeFilter }) => (
 			<Pill
 				key={id}
 				id={id}
-				value={filter}
+				value={filter.label}
 				theme="complete"
 				description={text}
 				inline
@@ -92,64 +99,54 @@ const PillCollection = ({ filters, removeFilter }) => (
 )
 
 const InputElement = ({
-	selectedFilterType,
+	selectedFilter,
 	selectionId,
 	handleKeyPress,
+	handleChange,
+	handleChangeStateObject,
 	value,
 }) => {
-	const TextInput = () => (
-		<Input
-			innerRef={ref => (this.inputRef = ref)}
-			type={'text'}
-			placeholder={
-				selectedFilterType
-					? selectedFilterType.prompt
-					: 'Select filter type first...'
-			}
-			disabled={selectionId === null}
-			onKeyPress={this.handleKeyPress}
-			onChange={e =>
-				this.setState({
-					value: e.target.value,
-				})
-			}
-			value={value}
-		/>
-	)
-	if (selectedFilterType)
-		switch (selectedFilterType.inputType) {
-			case 'text':
-				return <TextInput />
-			case 'date':
+	if (selectedFilter)
+		switch (selectedFilter.inputType) {
+			case types.DATE:
 				return (
 					<DatePicker
 						value={value}
-						handleValueChange={newDate => this.setState({ value: newDate })}
+						handleChangeValue={handleChange}
 						dateType={DatePicker.dateTypes.TODAY_TO}
 					/>
 				)
-			case 'date_range':
+			case types.DATE_RANGE:
 				return (
 					<DatePicker
 						value={value}
-						handleValueChange={newDate =>
-							this.setState(prevState => ({
-								value: { ...prevState.value, ...newDate },
-							}))
-						}
+						handleChangeValue={handleChangeStateObject}
 						dateType={DatePicker.dateTypes.RANGE}
 					/>
 				)
+			case types.TEXT:
 			default:
-				return <Fragment />
+				return (
+					<Input
+						type="text"
+						placeholder={
+							selectedFilter
+								? selectedFilter.prompt
+								: 'Select filter type first...'
+						}
+						onKeyPress={handleKeyPress}
+						onChange={e => handleChange(e.target.value)}
+						value={value}
+					/>
+				)
 		}
 	return null
 }
 
 export default class TagText extends Component {
 	state = {
-		selectionId: null,
-		value: '',
+		selectedFilter: null,
+		value: null,
 		activeFilters: [],
 	}
 
@@ -161,33 +158,57 @@ export default class TagText extends Component {
 				prompt: PropTypes.string.isRequired,
 			})
 		),
+		defaultLabel: PropTypes.string.isRequired,
 	}
 
+	static types = types
+
 	handleKeyPress = e => {
+		const { selectedFilter, value } = this.state
 		if (e.key === 'Enter') {
-			this.addFilter(this.state.selectionId, this.state.value)
+			this.addFilter(selectedFilter, value)
 		}
 	}
 
-	changeFilter = selectionId => {
-		this.setState({ selectionId, value: '' })
+	changeFilter = filter => {
+		this.setState({ selectedFilter: filter, value: filter.defaultValue })
 		// this.inputRef.focus()
 	}
 
 	handleChange = newValue => {
-		this.setState({
-			value: newValue,
-		})
+		this.setState({ value: newValue })
 	}
 
-	addFilter = (filter, text) => {
-		const newTag = { id: `${filter}: ${text}`, filter, text }
+	handleChangeStateObject = newValue => {
+		this.setState(({ value }) => ({
+			value: { ...value, ...newValue },
+		}))
+	}
+
+	addFilter = (filter, value) => {
 		const { activeFilters } = this.state
+		let text = ''
+		const formatDate = date => moment(date).format('MM/DD/YY')
+		switch (filter.inputType) {
+			case types.TEXT:
+				text = value
+				break
+			case types.DATE:
+				text = formatDate(value)
+				break
+			case types.DATE_RANGE:
+				text = `${formatDate(value.startDate)} to ${formatDate(value.endDate)}`
+				break
+			default:
+				text = ''
+				break
+		}
+		const newTag = { id: `${filter.label}: ${text}`, filter, text }
 		if (!activeFilters.some(filter => filter.id === newTag.id)) {
 			this.setState(prevState => ({
 				activeFilters: [{ ...newTag }, ...prevState.activeFilters],
-				value: '',
-				selectionId: null,
+				value: null,
+				selectedFilter: null,
 			}))
 		}
 	}
@@ -205,30 +226,29 @@ export default class TagText extends Component {
 	}
 
 	render() {
-		const { selectionId, value, activeFilters } = this.state
-		const { options } = this.props
-		const selectedFilterType = options.find(
-			option => option.label === selectionId
-		)
+		const { selectedFilter, value, activeFilters } = this.state
+		const { options, defaultLabel } = this.props
 		return (
 			<Wrapper>
 				<Container>
 					<InputContainer>
 						<OptionDropdown
-							label="filter"
+							label={defaultLabel.toUpperCase()}
 							theme="primary"
 							options={options}
-							selectionId={selectionId}
+							selectionId={selectedFilter ? selectedFilter.id : null}
 							changeFilter={this.changeFilter}
 						/>
 						<InputElement
-							selectedFilterType={selectedFilterType}
-							selectionId={selectionId}
+							selectedFilter={selectedFilter}
+							selectionId={selectedFilter ? selectedFilter.id : null}
 							handleKeyPress={this.handleKeyPress}
+							handleChange={this.handleChange}
+							handleChangeStateObject={this.handleChangeStateObject}
 							value={value}
 						/>
-						{value.length > 0 && (
-							<AddIcon onClick={() => this.addFilter(selectionId, value)} />
+						{value && (
+							<AddIcon onClick={() => this.addFilter(selectedFilter, value)} />
 						)}
 					</InputContainer>
 				</Container>

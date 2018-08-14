@@ -155,6 +155,7 @@ export default class OptionDropdown extends Component {
 		theme: PropTypes.oneOf(['primary', 'secondary', 'tertiary']),
 		options: PropTypes.arrayOf(
 			PropTypes.shape({
+				id: PropTypes.any.isRequired,
 				label: PropTypes.string.isRequired,
 			})
 		),
@@ -186,6 +187,7 @@ export default class OptionDropdown extends Component {
 	render() {
 		const { open, hover } = this.state
 		const { selectionId, theme, label, options, changeFilter } = this.props
+		const activeFilter = options.find(option => option.id === selectionId)
 		return (
 			<Wrapper>
 				<ThemeProvider
@@ -203,7 +205,9 @@ export default class OptionDropdown extends Component {
 							}}
 							onClick={this.handleClickContainer}>
 							<FilterLabel>
-								{selectionId ? selectionId.toUpperCase() : label.toUpperCase()}
+								{activeFilter
+									? activeFilter.label.toUpperCase()
+									: label.toUpperCase()}
 							</FilterLabel>
 							<Flip in={open} component={<DropdownIcon />} />
 						</Container>
@@ -211,11 +215,11 @@ export default class OptionDropdown extends Component {
 							{open && (
 								<OptionsCollection key="__container__">
 									{options.map(option => (
-										<Fragment key={option.label}>
-											{option.label !== selectionId && (
+										<Fragment key={option.id}>
+											{option.id !== selectionId && (
 												<Option
 													onMouseDown={() => {
-														changeFilter(option.label)
+														changeFilter(option)
 														this.setState({ open: false })
 													}}>
 													<OptionText>{option.label.toUpperCase()}</OptionText>

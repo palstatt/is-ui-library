@@ -273,24 +273,32 @@ const columnizerConfig = {
 
 const filterOptions = [
 	{
+		id: 'name_filter',
 		label: 'name',
-		inputType: 'text',
+		inputType: TagText.types.TEXT,
 		prompt: 'Type name...',
+		defaultValue: '',
 	},
 	{
+		id: 'date_filter',
 		label: 'date',
-		inputType: 'date',
+		inputType: TagText.types.DATE,
 		prompt: 'Select date...',
+		defaultValue: null,
 	},
 	{
+		id: 'date_range_filter',
 		label: 'date range',
-		inputType: 'date_range',
+		inputType: TagText.types.DATE_RANGE,
 		prompt: 'Select date range...',
+		defaultValue: { startDate: null, endDate: null },
 	},
 	{
+		id: 'version_filter',
 		label: 'version',
-		inputType: 'text',
+		inputType: TagText.types.TEXT,
 		prompt: 'Type version...',
+		defaultValue: '',
 	},
 ]
 
@@ -380,7 +388,7 @@ class Demo extends Component {
 							centeredHeader
 							collectionComponent={<CardCollection users={users} />}
 						/>
-						<TagText options={filterOptions} />
+						<TagText options={filterOptions} defaultLabel={'select filter'} />
 						<Columnizer
 							navItems={columnizerConfig.navItems}
 							pages={columnizerConfig.pages}
