@@ -11,6 +11,7 @@ import {
 	Drawer,
 	CardCollection,
 	TagCollection,
+	DatePicker,
 	Pill,
 	SnackBar,
 	QuickSwitch,
@@ -22,6 +23,7 @@ import {
 	colors,
 	shadows,
 } from '../../src'
+// import '@atlaskit/css-reset'
 import { Helmet } from 'react-helmet'
 import axios from 'axios'
 
@@ -54,6 +56,7 @@ const ContextNav = styled.div`
 `
 
 const BodyContainer = styled.div`
+	background: ${colors.bg_grey};
 	height: 100%;
 	width: 100%;
 	padding: 24px;
@@ -277,7 +280,12 @@ const filterOptions = [
 	{
 		label: 'date',
 		inputType: 'date',
-		prompt: 'Enter date...',
+		prompt: 'Select date...',
+	},
+	{
+		label: 'date range',
+		inputType: 'date_range',
+		prompt: 'Select date range...',
 	},
 	{
 		label: 'version',
@@ -324,6 +332,10 @@ class Demo extends Component {
 				actionLabel: 'retry',
 			},
 		],
+		dateValue: {
+			startDate: null,
+			endDate: null,
+		},
 	}
 
 	handleRemove = index => {
@@ -333,6 +345,7 @@ class Demo extends Component {
 	}
 
 	render() {
+		const { dateValue } = this.state
 		return (
 			<Fragment>
 				<Helmet>

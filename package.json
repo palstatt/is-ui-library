@@ -19,23 +19,29 @@
 		"test:watch": "nwb test-react --server"
 	},
 	"dependencies": {
+		"aphrodite": "^2.2.2",
 		"immutability-helper": "^2.7.1",
 		"moment": "^2.22.2",
 		"react-animate-height": "^2.0.3",
 		"react-autosize-textarea": "^4.0.0",
+		"react-dates": "^17.1.1",
+		"react-moment-proptypes": "^1.6.0",
 		"react-pose": "^2.2.0",
 		"react-transition-group": "^2.4.0",
+		"react-with-styles": "^3.2.1",
+		"react-with-styles-interface-aphrodite": "^5.0.0",
 		"rxjs": "^6.2.2",
-		"styled-components": "^3.3.3"
+		"styled-components": "^3.4.2"
 	},
 	"peerDependencies": {
 		"react": "16.x"
 	},
 	"devDependencies": {
+		"@atlaskit/css-reset": "^3.0.1",
 		"axios": "^0.18.0",
-		"nwb": "0.21.x",
-		"react": "^16.4.1",
-		"react-dom": "^16.4.1",
+		"nwb": "0.23.0",
+		"react": "^16.4.2",
+		"react-dom": "^16.4.2",
 		"react-helmet": "^5.2.0"
 	},
 	"author": "",

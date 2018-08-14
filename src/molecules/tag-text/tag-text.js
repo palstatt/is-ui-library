@@ -6,6 +6,7 @@ import {
 	OptionDropdown,
 	Drawer,
 	Pill,
+	DatePicker,
 	colors,
 	shadows,
 } from '../..'
@@ -90,6 +91,61 @@ const PillCollection = ({ filters, removeFilter }) => (
 	</PillContainer>
 )
 
+const InputElement = ({
+	selectedFilterType,
+	selectionId,
+	handleKeyPress,
+	value,
+}) => {
+	const TextInput = () => (
+		<Input
+			innerRef={ref => (this.inputRef = ref)}
+			type={'text'}
+			placeholder={
+				selectedFilterType
+					? selectedFilterType.prompt
+					: 'Select filter type first...'
+			}
+			disabled={selectionId === null}
+			onKeyPress={this.handleKeyPress}
+			onChange={e =>
+				this.setState({
+					value: e.target.value,
+				})
+			}
+			value={value}
+		/>
+	)
+	if (selectedFilterType)
+		switch (selectedFilterType.inputType) {
+			case 'text':
+				return <TextInput />
+			case 'date':
+				return (
+					<DatePicker
+						value={value}
+						handleValueChange={newDate => this.setState({ value: newDate })}
+						dateType={DatePicker.dateTypes.TODAY_TO}
+					/>
+				)
+			case 'date_range':
+				return (
+					<DatePicker
+						value={value}
+						handleValueChange={newDate =>
+							this.setState(prevState => ({
+								value: { ...prevState.value, ...newDate },
+							}))
+						}
+						dateType={DatePicker.dateTypes.RANGE}
+					/>
+				)
+			default:
+				return <Fragment />
+		}
+	return null
+}
+
 export default class TagText extends Component {
 	state = {
 		selectionId: null,
@@ -115,7 +171,13 @@ export default class TagText extends Component {
 
 	changeFilter = selectionId => {
 		this.setState({ selectionId, value: '' })
-		this.inputRef.focus()
+		// this.inputRef.focus()
+	}
+
+	handleChange = newValue => {
+		this.setState({
+			value: newValue,
+		})
 	}
 
 	addFilter = (filter, text) => {
@@ -159,21 +221,10 @@ export default class TagText extends Component {
 							selectionId={selectionId}
 							changeFilter={this.changeFilter}
 						/>
-						<Input
-							innerRef={ref => (this.inputRef = ref)}
-							type={selectedFilterType ? selectedFilterType.inputType : 'text'}
-							placeholder={
-								selectedFilterType
-									? selectedFilterType.prompt
-									: 'Select filter type first...'
-							}
-							disabled={selectionId === null}
-							onKeyPress={this.handleKeyPress}
-							onChange={e =>
-								this.setState({
-									value: e.target.value,
-								})
-							}
+						<InputElement
+							selectedFilterType={selectedFilterType}
+							selectionId={selectionId}
+							handleKeyPress={this.handleKeyPress}
 							value={value}
 						/>
 						{value.length > 0 && (

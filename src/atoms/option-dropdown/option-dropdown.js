@@ -9,6 +9,14 @@ const transition = {
 }
 
 const themes = {
+	default: {
+		bg: colors.primary,
+		fg: colors.white,
+		border: colors.primary,
+		container_bg: colors.lightest_grey,
+		container_bg_hover: colors.primary__dark,
+		container_fg: colors.black,
+	},
 	primary: {
 		bg: colors.primary,
 		fg: colors.white,
@@ -92,9 +100,10 @@ const OptionsCollection = styled(posed.div(optionsCollectionProps))`
 	position: absolute;
 	padding: 8px 0;
 	top: 48px;
-	left: 8px;
+	left: 0;
 	z-index: 10;
 	box-shadow: ${shadows.focus};
+	width: auto;
 
 	::after {
 		content: '';
@@ -119,7 +128,6 @@ const Option = styled(posed.div(optionProps))`
 	position: relative;
 	justify-content: flex-start;
 	align-content: center;
-	width: 100%;
 	padding: 8px 16px;
 	cursor: pointer;
 	transition: 0.2s ease;
@@ -133,6 +141,7 @@ const Option = styled(posed.div(optionProps))`
 const OptionText = styled(H4)`
 	color: ${props => props.theme.container_fg};
 	line-height: normal;
+	white-space: nowrap;
 `
 
 export default class OptionDropdown extends Component {
