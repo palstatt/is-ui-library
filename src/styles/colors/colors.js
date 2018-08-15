@@ -21,10 +21,16 @@ const colors = {
 	light_grey: '#D6D6D6',
 	lightest_grey: '#EBEBEB',
 	warning: '#FF6E6E',
+	warning__light: '#FFA09C',
+	warning__dark: '#C73C43',
 	warning__bg: '#FFB6B6',
 	complete: '#6CFF7E',
+	complete__light: '#A4FFAF',
+	complete__dark: '#29CB4E',
 	complete__bg: '#B5FFBE',
 	attention: '#FFED4A',
+	attention__light: '#FFFF7E',
+	attention__dark: '#C8BB00',
 	attention__bg: '#FFF6A4',
 }
 

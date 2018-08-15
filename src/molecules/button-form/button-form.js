@@ -5,10 +5,36 @@ import AnimateHeight from 'react-animate-height'
 import { H2, Form, Spinner, colors, shadows } from '../..'
 import posed from 'react-pose'
 
-const transition = {
+const themes = {
 	default: {
-		ease: 'easeInOut',
-		duration: 250,
+		bg: colors.primary,
+		fg: colors.white,
+		borderColor: colors.primary,
+	},
+	hover: {
+		bg: colors.primary__dark,
+		fg: colors.white,
+		borderColor: colors.primary__dark,
+	},
+	open: {
+		bg: colors.primary__bg,
+		fg: colors.primary,
+		borderColor: colors.primary,
+	},
+	sending: {
+		bg: colors.attention,
+		fg: colors.black,
+		borderColor: colors.attention,
+	},
+	complete: {
+		bg: colors.complete,
+		fg: colors.black,
+		borderColor: colors.complete,
+	},
+	error: {
+		bg: colors.warning,
+		fg: colors.black,
+		borderColor: colors.warning,
 	},
 }
 
@@ -28,54 +54,19 @@ const Spacer = styled.div`
 	margin-left: 24px;
 `
 
-const buttonContainerProps = {
-	default: {
-		backgroundColor: colors.primary,
-		color: colors.white,
-		borderColor: colors.primary,
-		transition,
-	},
-	open: {
-		backgroundColor: colors.white,
-		color: colors.primary,
-		borderColor: colors.primary,
-		transition,
-	},
-	sending: {
-		backgroundColor: colors.attention,
-		color: colors.black,
-		borderColor: colors.attention,
-		transition,
-	},
-	complete: {
-		backgroundColor: colors.complete,
-		color: colors.black,
-		borderColor: colors.complete,
-		transition,
-	},
-	error: {
-		backgroundColor: colors.warning,
-		color: colors.black,
-		borderColor: colors.warning,
-		transition,
-	},
-}
-const ButtonContainer = styled(posed.div(buttonContainerProps))`
+const ButtonContainer = styled.div`
 	background: ${props => props.theme.bg};
-	border: 2px solid ${props => props.theme.border};
+	color: ${props => props.theme.fg};
 	cursor: ${props => (props.pose === 'default' ? 'pointer' : 'default')};
 	border-radius: 4px ${props => (props.pose === 'open' ? '4px 0 0' : '')};
 	pointer-events: ${props => (props.pose === 'default' ? 'auto' : 'none')};
+	border: 2px solid ${props => props.theme.borderColor};
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	z-index: 3;
 	height: 56px;
-
-	:hover {
-		background: ${props => props.theme.fg};
-		color: ${props => props.theme.bg};
-	}
+	transition: 0.2s ease;
 `
 
 const ButtonLabel = styled(H2)`
@@ -95,6 +86,7 @@ const FormContainer = styled.div`
 export default class ButtonForm extends Component {
 	state = {
 		style: 'default',
+		hover: false,
 	}
 
 	static propTypes = {
@@ -130,6 +122,14 @@ export default class ButtonForm extends Component {
 		this.setState({ style: 'default' })
 	}
 
+	handleMouseEnter = () => {
+		this.setState({ hover: true })
+	}
+
+	handleMouseLeave = () => {
+		this.setState({ hover: false })
+	}
+
 	handleSubmit = () => {
 		this.props.onSubmit(this.handleComplete, this.handleError)
 		this.setState({ style: 'sending' })
@@ -148,29 +148,36 @@ export default class ButtonForm extends Component {
 	}
 
 	render() {
-		const { style } = this.state
+		const { style, hover } = this.state
 		const { buttonLabel, formName, formFields } = this.props
 		return (
-			<Container shadow={style === 'open' ? shadows.focus : shadows.basic}>
-				<ButtonContainer pose={style} open={open} onMouseDown={this.handleOpen}>
-					<ButtonLabel>{buttonLabel[style].toUpperCase()}</ButtonLabel>
-					{style === 'sending' && (
-						<Spacer>
-							<Spinner width={24} height={24} color={colors.black} />
-						</Spacer>
-					)}
-				</ButtonContainer>
-				<AnimateHeight height={style === 'open' ? 'auto' : 0} animateOpacity>
-					<FormContainer>
-						<Form
-							formName={formName}
-							formFields={formFields}
-							onCancel={this.handleClose}
-							onSubmit={this.handleSubmit}
-						/>
-					</FormContainer>
-				</AnimateHeight>
-			</Container>
+			<ThemeProvider
+				theme={themes[hover && style === 'default' ? 'hover' : style]}>
+				<Container shadow={style === 'open' ? shadows.focus : shadows.basic}>
+					<ButtonContainer
+						pose={style}
+						onMouseDown={this.handleOpen}
+						onMouseEnter={this.handleMouseEnter}
+						onMouseLeave={this.handleMouseLeave}>
+						<ButtonLabel>{buttonLabel[style].toUpperCase()}</ButtonLabel>
+						{style === 'sending' && (
+							<Spacer>
+								<Spinner width={24} height={24} color={colors.black} />
+							</Spacer>
+						)}
+					</ButtonContainer>
+					<AnimateHeight height={style === 'open' ? 'auto' : 0} animateOpacity>
+						<FormContainer>
+							<Form
+								formName={formName}
+								formFields={formFields}
+								onCancel={this.handleClose}
+								onSubmit={this.handleSubmit}
+							/>
+						</FormContainer>
+					</AnimateHeight>
+				</Container>
+			</ThemeProvider>
 		)
 	}
 }

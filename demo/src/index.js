@@ -372,11 +372,11 @@ class Demo extends Component {
 					<Toolbar />
 					<ContextNav />
 					<BodyContainer>
-						{/* <ButtonForm
+						<ButtonForm
 							buttonLabel="report issue"
 							formName="test"
 							formFields={formFields}
-						/> */}
+						/>
 						<QuickSwitch
 							label="change status"
 							options={statuses}

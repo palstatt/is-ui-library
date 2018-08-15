@@ -24,6 +24,7 @@ const themes = {
 		border: colors.primary,
 		container_bg: colors.lightest_grey,
 		container_bg_hover: colors.primary__dark,
+		container_bg_active: colors.primary__bg,
 		container_fg: colors.black,
 	},
 	primary: {
@@ -32,6 +33,7 @@ const themes = {
 		border: colors.primary,
 		container_bg: colors.primary,
 		container_bg_hover: colors.primary__dark,
+		container_bg_active: colors.primary__bg,
 		container_fg: colors.white,
 	},
 	secondary: {
@@ -40,6 +42,7 @@ const themes = {
 		border: colors.secondary,
 		container_bg: colors.secondary,
 		container_bg_hover: colors.secondary__dark,
+		container_bg_active: colors.secondary__bg,
 		container_fg: colors.black,
 	},
 	tertiary: {
@@ -48,37 +51,51 @@ const themes = {
 		border: colors.tertiary,
 		container_bg: colors.tertiary,
 		container_bg_hover: colors.tertiary__dark,
+		container_bg_active: colors.tertiary__bg,
 		container_fg: colors.black,
 	},
 	complete: {
-		bg: colors.complete_bg,
+		bg: colors.complete,
 		fg: colors.black,
 		border: colors.complete,
-		container_bg: colors.complete_bg,
-		container_bg_hover: colors.complete,
+		container_bg: colors.complete,
+		container_bg_hover: colors.complete__dark,
+		container_bg_active: colors.complete__bg,
 		container_fg: colors.black,
 	},
-	caution: {
-		bg: colors.caution_bg,
+	attention: {
+		bg: colors.attention,
 		fg: colors.black,
-		border: colors.caution,
-		container_bg: colors.caution_bg,
-		container_bg_hover: colors.caution,
+		border: colors.attention,
+		container_bg: colors.attention,
+		container_bg_hover: colors.attention__dark,
+		container_bg_active: colors.attention__bg,
 		container_fg: colors.black,
 	},
 	warning: {
-		bg: colors.warning_bg,
+		bg: colors.warning,
 		fg: colors.black,
 		border: colors.warning,
-		container_bg: colors.warning_bg,
-		container_bg_hover: colors.warning,
+		container_bg: colors.warning,
+		container_bg_hover: colors.warning__dark,
+		container_bg_active: colors.warning__bg,
 		container_fg: colors.black,
 	},
 }
 
-const reverseTheme = ({ bg, fg, ...rest }) => ({
-	bg: fg,
-	fg: bg,
+const reverseTheme = ({
+	bg,
+	container_bg_active,
+	fg,
+	container_bg_hover,
+	border,
+	...rest
+}) => ({
+	bg: container_bg_active,
+	fg: container_bg_hover,
+	border: container_bg_hover,
+	container_bg_active,
+	container_bg_hover,
 	...rest,
 })
 
@@ -122,20 +139,33 @@ const CheckIcon = styled(MaterialIcon).attrs({
 `
 
 const optionsCollectionProps = {
-	enter: { opacity: 1, y: '0px', transition, staggerChildren: 75, delay: 125 },
+	enter: { opacity: 1, y: '0px', transition, staggerChildren: 25, delay: 125 },
 	exit: { opacity: 0, y: '-8px', transition },
 }
 const OptionsCollection = styled(posed.div(optionsCollectionProps))`
 	background: ${colors.lightest_grey};
 	color: ${props => props.theme.bg || colors.white};
-	display: inline-block;
+	display: inline-grid;
+	grid-template-columns: ${props =>
+		props.columns ? `${'1fr '.repeat(props.columns)}` : '1fr' || '1fr'};
+	grid-template-rows: auto 1fr;
+	grid-template-areas: ${props =>
+		props.columns
+			? `"${'prompt '.repeat(props.columns)}" "${'options '.repeat(
+					props.columns
+			  )}"`
+			: `"prompt" "options"` || `"prompt" "options"`};
 	border-radius: 4px;
 	position: absolute;
 	padding: 8px 0;
 	top: 64px;
-	left: 8px;
+	${props =>
+		props.align === 'center' ? 'left' : props.align || 'left'}: ${props =>
+		props.align === 'center'
+			? `calc(50% - ${props.columns * 140}px)`
+			: '8px' || '8px'};
 	z-index: 10;
-	min-width: 240px;
+	width: ${props => props.columns * 280 || 280}px;
 	box-shadow: ${shadows.focus};
 
 	::after {
@@ -146,7 +176,9 @@ const OptionsCollection = styled(posed.div(optionsCollectionProps))`
 		border-right: 16px solid transparent;
 		border-bottom: 16px solid ${colors.lightest_grey};
 		top: -8px;
-		left: 8px;
+		${props =>
+			props.align === 'center' ? 'left' : props.align || 'left'}: ${props =>
+			props.align === 'center' ? 'calc(50% - 16px)' : '8px' || '8px'};
 		z-index: -1;
 	}
 `
@@ -195,6 +227,7 @@ const OptionText = styled(H3)`
 `
 
 const PromptText = styled(Accent)`
+	grid-area: prompt;
 	line-height: normal;
 	margin: 8px;
 `
@@ -208,7 +241,15 @@ export default class QuickSwitch extends Component {
 
 	static propTypes = {
 		label: PropTypes.string.isRequired,
-		theme: PropTypes.oneOf(['default', 'primary', 'secondary', 'tertiary']),
+		theme: PropTypes.oneOf([
+			'default',
+			'primary',
+			'secondary',
+			'tertiary',
+			'complete',
+			'attention',
+			'warning',
+		]),
 		options: PropTypes.arrayOf(
 			PropTypes.shape({
 				label: PropTypes.string.isRequired,
@@ -217,6 +258,8 @@ export default class QuickSwitch extends Component {
 		).isRequired,
 		onSelectOption: PropTypes.func.isRequired,
 		prompt: PropTypes.string.isRequired,
+		columns: PropTypes.number,
+		alignOptions: PropTypes.oneOf(['left', 'center', 'right']),
 	}
 
 	static defaultProps = {
@@ -224,6 +267,7 @@ export default class QuickSwitch extends Component {
 		options: [],
 		label: '',
 		prompt: 'Select an option...',
+		alignOptions: 'right',
 		onSelectOption: () => {},
 	}
 
@@ -251,7 +295,15 @@ export default class QuickSwitch extends Component {
 
 	render() {
 		const { open, hover, selection } = this.state
-		const { label, options, onSelectOption, theme, prompt } = this.props
+		const {
+			label,
+			options,
+			onSelectOption,
+			theme,
+			prompt,
+			columns,
+			alignOptions,
+		} = this.props
 		return (
 			<Wrapper>
 				<ThemeProvider
@@ -267,13 +319,16 @@ export default class QuickSwitch extends Component {
 							onMouseLeave={() => {
 								this.setState({ hover: false })
 							}}
-							onClick={this.handleToggle}>
+							onMouseDown={this.handleToggle}>
 							<ButtonLabel>{label.toUpperCase()}</ButtonLabel>
 							<Flip in={open} component={<DropdownIcon />} />
 						</Container>
 						<PoseGroup>
 							{open && (
-								<OptionsCollection key="__container__">
+								<OptionsCollection
+									key="__container__"
+									columns={columns}
+									align={alignOptions}>
 									<PromptText center>{prompt}</PromptText>
 									{options.map(option => {
 										const active = option.label === selection
