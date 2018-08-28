@@ -23,23 +23,27 @@
     memory-fs "^0.4.1"
     resolve "^1.2.0"
 
+"@popmotion/easing@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@popmotion/easing/-/easing-1.0.1.tgz#48336aea29542113df10aeb81b4fd10f0b95f937"
+
 "@types/invariant@^2.2.29":
   version "2.2.29"
   resolved "https://registry.yarnpkg.com/@types/invariant/-/invariant-2.2.29.tgz#aa845204cd0a289f65d47e0de63a6a815e30cc66"
 
 "@types/node@^10.0.5":
-  version "10.7.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.7.0.tgz#d384b2c8625414ab2aa18fdf989c288d6a7a8202"
+  version "10.7.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.7.1.tgz#b704d7c259aa40ee052eec678758a68d07132a2e"
 
 "@types/prop-types@*":
-  version "15.5.4"
-  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.4.tgz#9e6199bad131786e24c2baa2a82705a02139fbf8"
+  version "15.5.5"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.5.tgz#17038dd322c2325f5da650a94d5f9974943625e3"
   dependencies:
     "@types/react" "*"
 
 "@types/react@*", "@types/react@>=16":
-  version "16.4.8"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.8.tgz#ff0440429783df0927bdcd430fa1225f7c08cf36"
+  version "16.4.11"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.11.tgz#330f3d864300f71150dc2d125e48644c098f8770"
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -333,11 +337,11 @@ anymatch@^2.0.0:
     normalize-path "^2.1.1"
 
 aphrodite@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/aphrodite/-/aphrodite-2.2.2.tgz#1292a6c67f5c35f8855f3f61475fe530d903bdd1"
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/aphrodite/-/aphrodite-2.2.3.tgz#ebba43ba08473d146cb039ed0a2a4530bc83b812"
   dependencies:
     asap "^2.0.3"
-    inline-style-prefixer "^4.0.0"
+    inline-style-prefixer "^4.0.2"
     string-hash "^1.1.3"
 
 aproba@^1.0.3, aproba@^1.1.1:
@@ -383,7 +387,7 @@ array-flatten@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
 
-array-flatten@^2.1.0, array-flatten@^2.1.1:
+array-flatten@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-2.1.1.tgz#426bb9da84090c1838d812c8150af20a8331e296"
 
@@ -2293,7 +2297,13 @@ defaults@^1.0.3:
   dependencies:
     clone "^1.0.2"
 
-define-properties@^1.1.2, define-properties@~1.1.2:
+define-properties@^1.1.2:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/define-properties/-/define-properties-1.1.3.tgz#cf88da6cbee26fe6db7094f61d870cbd84cee9f1"
+  dependencies:
+    object-keys "^1.0.12"
+
+define-properties@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/define-properties/-/define-properties-1.1.2.tgz#83a73f2fea569898fb737193c8f873caf6d45c94"
   dependencies:
@@ -3794,7 +3804,7 @@ ini@~1.3.0:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
 
-inline-style-prefixer@^4.0.0:
+inline-style-prefixer@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/inline-style-prefixer/-/inline-style-prefixer-4.0.2.tgz#d390957d26f281255fe101da863158ac6eb60911"
   dependencies:
@@ -5238,7 +5248,7 @@ object-is@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/object-is/-/object-is-1.0.1.tgz#0aa60ec9989a0b3ed795cf4d06f62cf1ad6539b6"
 
-object-keys@^1.0.11, object-keys@^1.0.8, object-keys@^1.0.9:
+object-keys@^1.0.11, object-keys@^1.0.12, object-keys@^1.0.8, object-keys@^1.0.9:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.12.tgz#09c53855377575310cca62f55bb334abff7b3ed2"
 
@@ -5628,9 +5638,9 @@ pkg-dir@^2.0.0:
   dependencies:
     find-up "^2.1.0"
 
-popmotion-pose@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/popmotion-pose/-/popmotion-pose-2.1.2.tgz#90aa81e70f254f136fbc7c502f9b95b01ac946a9"
+popmotion-pose@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/popmotion-pose/-/popmotion-pose-2.2.0.tgz#66673a2bf6647a0e9da550573d33681f8609cd00"
   dependencies:
     popmotion "^8.3.3"
     pose-core "^0.7.4"
@@ -5638,12 +5648,13 @@ popmotion-pose@^2.1.2:
     tslib "^1.9.1"
 
 popmotion@^8.3.3:
-  version "8.3.3"
-  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-8.3.3.tgz#af87d4f260f323f0a47c36aea32a18b568640bb0"
+  version "8.3.6"
+  resolved "https://registry.yarnpkg.com/popmotion/-/popmotion-8.3.6.tgz#33b214ca8e2b27029183d69fb6538368bba40e77"
   dependencies:
+    "@popmotion/easing" "^1.0.1"
     framesync "^3.1.9"
     hey-listen "^1.0.5"
-    style-value-types "^3.0.3"
+    style-value-types "^3.0.4"
     stylefire "^2.0.6"
     tslib "^1.9.1"
 
@@ -5971,8 +5982,8 @@ react-addons-shallow-compare@^15.6.2:
     object-assign "^4.1.0"
 
 react-animate-height@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/react-animate-height/-/react-animate-height-2.0.3.tgz#7ee31ab2b357e25d68f9c6f53fcba8834abc17a1"
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-animate-height/-/react-animate-height-2.0.4.tgz#34d60949e915ce445bf43e3046dc4b8435e21ed6"
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.1"
@@ -5988,8 +5999,8 @@ react-autosize-textarea@^4.0.0:
     prop-types "^15.5.6"
 
 react-dates@^17.1.1:
-  version "17.1.1"
-  resolved "https://registry.yarnpkg.com/react-dates/-/react-dates-17.1.1.tgz#4703d701546c9f2edae86df7feb8648f6a02b247"
+  version "17.2.0"
+  resolved "https://registry.yarnpkg.com/react-dates/-/react-dates-17.2.0.tgz#d8cfe29ceecb3fbe37abbaa385683504cc53cdf6"
   dependencies:
     airbnb-prop-types "^2.10.0"
     consolidated-events "^1.1.1 || ^2.0.0"
@@ -6057,11 +6068,11 @@ react-portal@^4.1.5:
     prop-types "^15.5.8"
 
 react-pose@^2.2.0:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/react-pose/-/react-pose-2.2.1.tgz#1565db1e94808591c3346c979d732b7f189097ee"
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-pose/-/react-pose-2.3.0.tgz#adf9790744ebd7a36d582c89ce316d1183198bff"
   dependencies:
     hey-listen "^1.0.5"
-    popmotion-pose "^2.1.2"
+    popmotion-pose "^2.2.0"
     tslib "^1.9.1"
 
 react-proxy@^1.1.7:
@@ -6112,14 +6123,14 @@ react-with-direction@^1.3.0:
     prop-types "^15.6.0"
 
 react-with-styles-interface-aphrodite@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/react-with-styles-interface-aphrodite/-/react-with-styles-interface-aphrodite-5.0.0.tgz#a2b80aca271f5877ec48e0641cee2cdeb2ca2b3c"
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-with-styles-interface-aphrodite/-/react-with-styles-interface-aphrodite-5.0.1.tgz#3b3df936b9d3673b1be5f8512180b51658994b6a"
   dependencies:
-    array-flatten "^2.1.1"
-    has "^1.0.1"
+    array.prototype.flat "^1.2.1"
+    has "^1.0.3"
     object.assign "^4.1.0"
     object.entries "^1.0.4"
-    rtl-css-js "^1.8.0"
+    rtl-css-js "^1.10.0"
 
 react-with-styles-interface-css@^4.0.2:
   version "4.0.3"
@@ -6475,7 +6486,7 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rtl-css-js@^1.8.0:
+rtl-css-js@^1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/rtl-css-js/-/rtl-css-js-1.10.0.tgz#958ac1fa68ef5ff4c241e4aa26cf77365d8993d7"
 
@@ -7064,13 +7075,13 @@ style-loader@0.21.0:
     loader-utils "^1.1.0"
     schema-utils "^0.4.5"
 
-style-value-types@^3.0.3:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-3.0.5.tgz#e7a7d35c4fc0768421ac12c70df1353f750a4468"
+style-value-types@^3.0.3, style-value-types@^3.0.4:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/style-value-types/-/style-value-types-3.0.6.tgz#144f634ba0c8f053ee615c7308adc97fe83917dd"
 
 styled-components@^3.4.2:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.4.2.tgz#8f518419932327e47fe9144824e3184b3e2da95d"
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-3.4.4.tgz#dbd2ea6338fb050b5b56783e189434fd7f18eda5"
   dependencies:
     buffer "^5.0.3"
     css-to-react-native "^2.0.3"
